@@ -46,9 +46,9 @@ def Post_details(request):
         if App_serializer.is_valid():
             App_serializer.save()
             venue_img = App_serializer.validated_data.get('venue_img')
-            inp = '/media/d_daemon/Persona/VS_code/Color_Detecn/backend/media/images/'+venue_img.name
+            inp = 'X:\\VS_code\\Color_Detecn\\backend\\media\\images\\'+venue_img.name
             print("here")
-            out = run( [sys.executable , '//media//d_daemon//Persona//VS_code//Color_Detecn//backend//openCV-color-detection-master//main.py',inp],shell = False , stdout= PIPE)
+            out = run( [sys.executable , 'X:\\VS_code\\Color_Detecn\\backend\\openCV-color-detection-master\\main.py',inp],shell = False , stdout= PIPE)
             output = out.stdout
             print("here1")
             decoded_output = output.decode('utf-8')

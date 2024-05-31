@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { useState, useEffect } from 'react';
+import ChildComponent from "./childComponent";
 
 const registerSchema = yup.object().shape({
   title: yup.string(),
@@ -31,11 +32,13 @@ const Form = () => {
 
 
   const handleChange = (e) => {
+    // console.log(e.target.name);
     if ([e.target.name] == 'venue_img') {
+      // console.log("Second handle change");
       setPostImage({
-        image: e.target.files,
+        venue_img: e.target.files,
       });
-      console.log(e.target.files);
+      // console.log(e.target.files);
     } else {
       updateFormData({
         ...postData,
@@ -51,7 +54,7 @@ const Form = () => {
     for (let value in postData) {
       formData.append(value, postData[value]);
     }
-    formData.append("venue_img", postimage.image[0]);
+    formData.append("venue_img", postimage.venue_img[0]);
 
     const savedUserResponse = await fetch(
       "http://127.0.0.1:8000/details",
@@ -61,7 +64,8 @@ const Form = () => {
       }
     );
     const savedUser = await savedUserResponse.json();
-    setAnswer(savedUser)
+    setAnswer(savedUser);
+    console.log(answer);
     onSubmitProps.resetForm(); // Resets the form after submit just in case 
   };
   
@@ -71,10 +75,11 @@ const Form = () => {
   const handleFormSubmit = async (values, onSubmitProps) => {
     // console.log(`${postData.title}`);
     // console.log(`${postData.body}`);
-    // console.log(`${postimage.image[0]}`);
+    // console.log(`${postimage.venue_img[0]}`);
     await register(values, onSubmitProps);
   };
   return (
+    <>
     <Formik
       onSubmit={handleFormSubmit} // When the button with type submit is pressed below it will triigger this and go to the function "handleFormSubmit"
       initialValues={initialValuesRegister}
@@ -116,7 +121,6 @@ const Form = () => {
                   label="body"
                   onBlur={handleBlur}
                   onChange={handleChange}
-
                   name="body"
                   error={
                     Boolean(touched.body) && Boolean(errors.body)
@@ -130,40 +134,17 @@ const Form = () => {
                   borderRadius="5px"
                   p="1rem"
                 >
-                  <Dropzone
-                    acceptedFiles=".jpg,.jpeg,.png"
-                    multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("venue_img", acceptedFiles[0])
-                    }
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed grey`}
-                        p="1rem"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
-                      >
-                        <input {...getInputProps()}
+                        <input
                           accept="image/*"
-                          id="post-image"
+                          id="venue_img"
                           onChange={handleChange}
                           name="venue_img"
                           type="file"
                         />
-                        {!postimage ? (
-                          <p>Add image Here</p>
-                        ) : (
-                          <Typography>{postimage.image[0].name}</Typography>
-                        )}
                       </Box>
-                    )}
-                  </Dropzone>
-                </Box>
               </>
             )}
           </Box>
-
           {/* BUTTONS */}
           <Box>
             <Button
@@ -182,13 +163,15 @@ const Form = () => {
             <div
               color="#fff"
             >
-            {JSON.stringify(answer)}
+            {/* {JSON.stringify(answer)} */}
             </div>
-            
           </Box>
+          
         </form>
       )}
     </Formik>
+    {answer ? <ChildComponent data={answer}/> : <div></div>}
+    </>
   );
 };
 
