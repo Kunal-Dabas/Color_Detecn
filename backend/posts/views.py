@@ -44,7 +44,7 @@ def Post_details(request):
         # print(cleaned_output)
         
         if App_serializer.is_valid():
-            # App_serializer.save()
+            App_serializer.save()
             venue_img = App_serializer.validated_data.get('venue_img')
             inp = '/media/d_daemon/Persona/VS_code/Color_Detecn/backend/media/images/'+venue_img.name
             print("here")
